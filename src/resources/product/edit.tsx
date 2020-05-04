@@ -16,9 +16,21 @@ import {
 import BookIcon from '@material-ui/icons/Book';
 export const ProductIcon = BookIcon;
 
+import SortableGridField from '../../components/sortableGridField'
 
-const ProductTitle = ({record}) => {
+
+const ProductTitle = ({record = {title: ''}}) => {
     return <span>{record.title}</span>;
+};
+
+const Images = (props) => {
+    return <SortableGridField 
+        {...props}
+        sortKey="ord"
+        resources="image"
+        parentResources="product"
+        items={props.record.images}
+    />
 };
 
 
@@ -46,6 +58,9 @@ const ProductEdit = (props) => {
                             </ImageInput>
                         </SimpleFormIterator>
                     </ArrayInput>
+                </FormTab>
+                <FormTab label="Ordina immagini">
+                    <Images ></Images>
                 </FormTab>
                 <FormTab label="meta">
                     <TextInput source="meta.title" label="meta title"/>

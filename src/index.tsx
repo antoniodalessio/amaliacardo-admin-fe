@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import { fetchUtils, Admin, Resource } from 'react-admin';
+import { Admin, Resource } from 'react-admin';
 
-import simpleRestProvider from './provider/dataProvider';
+import dataProvider from './provider/dataProvider';
 import authProvider from './provider/authProvider';
 
 import { 
@@ -19,15 +19,10 @@ import {
     CategoryCreate
 } from './resources/category/index';
 
-const httpClient = (url, options: any = {}) => {
-    if (!options.headers) {
-        options.headers = new Headers({ Accept: 'application/json' });
-    }
-    const token = localStorage.getItem('token');
-    options.headers.set('Authorization', `Bearer ${token}`);
-    return fetchUtils.fetchJson(url, options);
-};
-const dataProvider = simpleRestProvider(`${process.env.BASE_PATH}${process.env.API_PATH}`, httpClient);
+import { 
+    PublishShow,
+    PubIcon
+} from './resources/publish/index';
 
 render(
     <Admin 
@@ -50,6 +45,12 @@ render(
             edit={ProductEdit}
             create={ProductCreate}
             icon={ProductIcon}
+        />
+        <Resource
+            name="publish"
+            options={{ label: 'Pubblica' }}
+            list={PublishShow}
+            icon={PubIcon}
         />
     </Admin>,
     document.getElementById('root')

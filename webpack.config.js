@@ -38,7 +38,7 @@ module.exports = (env) => {
                     },
                     exclude: /dist/,
                 }
-            ]
+            ],
         },
         plugins: [
             new webpack.DefinePlugin(envKeys),

@@ -47,7 +47,7 @@ const convertToBlob = async (uri) => {
     return (await fetch(uri)).blob()
 }
 
-export default (apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
+const simpleRestProvider =  (apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
     getList: (resource, params) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
@@ -205,5 +205,25 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
                 })
             )
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
+    publish: (params) => {
+        return httpClient(`${apiUrl}/publish`, {
+            method: 'GET',
+        }).then((response) => {
+            return response.json
+        })
+    }
 });
 
+
+const httpClient = (url, options: any = {}) => {
+    if (!options.headers) {
+        options.headers = new Headers({ Accept: 'application/json' });
+    }
+    const token = localStorage.getItem('token');
+    options.headers.set('Authorization', `Bearer ${token}`);
+    return fetchUtils.fetchJson(url, options);
+};
+
+const dataProvider = simpleRestProvider(`${process.env.BASE_PATH}${process.env.API_PATH}`, httpClient);
+
+export default dataProvider

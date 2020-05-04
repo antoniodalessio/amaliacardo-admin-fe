@@ -9,6 +9,7 @@
         "es2017",
         "dom"
       ],
+      "plugins": [{ "name": "typescript-plugin-css-modules" }],
       "removeComments": true,
       "allowSyntheticDefaultImports": false,
       "jsx": "react",
