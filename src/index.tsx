@@ -83,12 +83,10 @@ render(
         <Resource 
             name="category"
             options={{ label: 'Categorie' }}
-            label="Categorie"
             list={CategoryList}
             edit={CategoryEdit}
             create={CategoryCreate}
             icon={CatIcon}
-            exporter={false}
         />
         <Resource 
             name="product"

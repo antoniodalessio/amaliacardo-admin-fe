@@ -39,8 +39,7 @@ class UserEdit extends React.Component {
                 <SimpleShowLayout>
                 <ReferenceManyField label="Send" reference="submission" target="customer">
                     <SingleFieldList>
-                        <TextField label="text" source="text" multiline={true} fullWidth={true} />
-                        {/* <DateField label="richiesto il" source="requestAt" /> */}
+                        <TextField label="text" source="text" fullWidth={true} />
                     </SingleFieldList>
                 </ReferenceManyField>
                 </SimpleShowLayout>

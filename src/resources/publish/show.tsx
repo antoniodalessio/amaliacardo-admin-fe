@@ -58,7 +58,7 @@ class Show extends React.Component<{}, State> {
     return (
       <Paper elevation={3} style={{padding: 10}}>
         <h1 className="MuiTypography-h3">Pubblica</h1>
-        {loading && <Loading loadingPrimary="Pubblicazione in corso" loadingSecondari=""/>}
+        {loading && <Loading loadingPrimary="Pubblicazione in corso" />}
         <Button variant="contained" color="secondary" onClick={this.clear.bind(this)}>Clear</Button>
         <Button variant="contained" color="primary" onClick={this.publishAll.bind(this)}>Pubblica tutto</Button>
         <Button variant="contained" color="primary" onClick={this.publishModified.bind(this)}>Pubblica modificati</Button>

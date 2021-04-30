@@ -1,5 +1,5 @@
-const authProvider = {
-    login: ({ username, password }) =>  {
+const authProvider: any = {
+    login: async ({ username, password }) =>  {
         const request = new Request(`${process.env.BASE_PATH}authenticate`, {
             method: 'POST',
             body: JSON.stringify({ username, password }),
@@ -17,7 +17,7 @@ const authProvider = {
                 localStorage.setItem('token', token);
             });
     },
-    checkAuth: async (params) => {
+    checkAuth: async (params: any) => {
         const token = localStorage.getItem('token')
         const request = new Request(`${process.env.BASE_PATH}checkAuth`, {
             method: 'POST',
@@ -33,7 +33,7 @@ const authProvider = {
             })
         return Promise.resolve();
     },
-    getPermissions: params => Promise.reject(),
+    getPermissions: (params: any) => Promise.reject(),
     logout: async () => {
         const token = localStorage.getItem('token')
         const request = new Request(`${process.env.BASE_PATH}logout`, {
