@@ -6,8 +6,9 @@ const dotenv = require('dotenv');
 
 module.exports = (env) => {
 
+    const envPath = env.development ? '.env' : '.env.production' 
 
-    const puntoenv = dotenv.config().parsed;
+    const puntoenv = dotenv.config({ path: envPath }).parsed;
   
     // reduce it to a nice object, the same as before
     const envKeys = Object.keys(puntoenv).reduce((prev, next) => {
@@ -38,7 +39,7 @@ module.exports = (env) => {
                     },
                     exclude: /dist/,
                 }
-            ]
+            ],
         },
         plugins: [
             new webpack.DefinePlugin(envKeys),

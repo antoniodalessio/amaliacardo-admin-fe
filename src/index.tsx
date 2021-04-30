@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import { fetchUtils, Admin, Resource } from 'react-admin';
+import { Admin, Resource } from 'react-admin';
 
-import simpleRestProvider from './provider/dataProvider';
+import dataProvider from './provider/dataProvider';
 import authProvider from './provider/authProvider';
 
 import { 
@@ -19,15 +19,61 @@ import {
     CategoryCreate
 } from './resources/category/index';
 
-const httpClient = (url, options: any = {}) => {
-    if (!options.headers) {
-        options.headers = new Headers({ Accept: 'application/json' });
-    }
-    const token = localStorage.getItem('token');
-    options.headers.set('Authorization', `Bearer ${token}`);
-    return fetchUtils.fetchJson(url, options);
-};
-const dataProvider = simpleRestProvider(`${process.env.BASE_PATH}${process.env.API_PATH}`, httpClient);
+import { 
+    PageList,
+    PageEdit,
+    PageIcon,
+    PageCreate
+} from './resources/page/index';
+
+import { 
+    UserList,
+    UserEdit,
+    UserIcon,
+    UserCreate
+} from './resources/user/index';
+
+import { 
+    CustomerList,
+    CustomerEdit,
+    CustomerIcon,
+    CustomerCreate
+} from './resources/customer/index';
+
+import { 
+    FabricList,
+    FabricEdit,
+    FabricIcon,
+    FabricCreate
+} from './resources/fabric/index';
+
+import { 
+    ReviewList,
+    ReviewEdit,
+    ReviewIcon,
+    ReviewCreate
+} from './resources/review/index';
+
+import { 
+    OrderList,
+    OrderEdit,
+    OrderIcon,
+    OrderCreate
+} from './resources/order/index';
+
+
+import { 
+    SubmissionList,
+    SubmissionShow,
+    SubmissionIcon,
+} from './resources/submission/index';
+
+
+
+import { 
+    PublishShow,
+    PubIcon
+} from './resources/publish/index';
 
 render(
     <Admin 
@@ -42,6 +88,7 @@ render(
             edit={CategoryEdit}
             create={CategoryCreate}
             icon={CatIcon}
+            exporter={false}
         />
         <Resource 
             name="product"
@@ -50,6 +97,67 @@ render(
             edit={ProductEdit}
             create={ProductCreate}
             icon={ProductIcon}
+        />
+        <Resource 
+            name="page"
+            options={{ label: 'Pagine' }}
+            list={PageList}
+            edit={PageEdit}
+            create={PageCreate}
+            icon={PageIcon}
+        />
+        <Resource 
+            name="fabric"
+            options={{ label: 'Tessuti' }}
+            list={FabricList}
+            edit={FabricEdit}
+            create={FabricCreate}
+            icon={FabricIcon}
+        />
+        <Resource 
+            name="review"
+            options={{ label: 'Recensioni' }}
+            list={ReviewList}
+            edit={ReviewEdit}
+            create={ReviewCreate}
+            icon={ReviewIcon}
+        />
+        <Resource
+            name="customer"
+            options={{ label: 'Clienti' }}
+            list={CustomerList}
+            edit={CustomerEdit}
+            create={CustomerCreate}
+            icon={CustomerIcon}
+        />
+        <Resource
+            name="submission"
+            options={{ label: 'Richieste info' }}
+            list={SubmissionList}
+            show={SubmissionShow}
+            icon={SubmissionIcon}
+        />
+        <Resource
+            name="user"
+            options={{ label: 'Utenti' }}
+            list={UserList}
+            edit={UserEdit}
+            create={UserCreate}
+            icon={UserIcon}
+        />
+        <Resource
+            name="order"
+            options={{ label: 'Ordini' }}
+            list={OrderList}
+            edit={OrderEdit}
+            create={OrderCreate}
+            icon={OrderIcon}
+        />
+        <Resource
+            name="publish"
+            options={{ label: 'Pubblica' }}
+            list={PublishShow}
+            icon={PubIcon}
         />
     </Admin>,
     document.getElementById('root')
