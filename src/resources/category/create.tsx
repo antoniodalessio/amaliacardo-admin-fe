@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { 
-    ImageInput,
-    ImageField,
     BooleanField,
     Create,
     TextInput,
@@ -9,7 +7,9 @@ import {
     FormTab,
     required,
     ReferenceInput,
-    SelectInput
+    SelectInput,
+    ImageInput,
+    ImageField
 } from 'react-admin';
 import RichTextInput from 'ra-input-rich-text';
 
@@ -26,15 +26,18 @@ const CategoryCreate = (props) => (
                 <TextInput source="title" />
                 <TextInput source="description" />
                 <RichTextInput source="text" />
-                <ImageInput source="thumb_preview" label="Immagine di preview" accept="image/*">
-                    <ImageField source="thumb_preview" title="title" />
-                </ImageInput>
-                <TextInput parse={v => v.replace(" ", "-")} source="slug" validate={required()} />
-                </FormTab>
-            <FormTab label="meta">
+                <TextInput parse={v => v.replace(" ", "-")} source="slug" validate={required()} fullWidth={true}/>
+                <TextInput source="icon" />
+                <h6 className="MuiTypography-h6">Meta</h6>
                 <TextInput source="meta.title" label="meta title"/>
-                <TextInput source="meta.description"label="meta description" />
-                <TextInput source="meta.keywork" label="meta keyword"/>
+                <TextInput source="meta.description"label="meta description" fullWidth={true}/>
+                <TextInput source="meta.keywords" label="meta keywords"/>
+            </FormTab>
+            <FormTab label="Immagine di copertina">
+                <TextInput source="thumb_preview" parse={v => v.replace(" ", "-")}/>
+                <ImageInput source="file" label={"Immagine di copertina"} accept="image/*">
+                    <ImageField source="uri" />
+                </ImageInput>
             </FormTab>
         </TabbedForm>
     </Create>

@@ -6,27 +6,26 @@ import {
     Datagrid, 
     TextField,
     EditButton,
-    ReferenceInput,
     ReferenceField,
     BooleanField,
-    ChipField
+    ChipField,
+    SearchInput
 } from 'react-admin';
 
-
-// const ProductFilter = (props) => (
-//     <Filter {...props}>
-//        <ReferenceInput label="Category" source="category" reference="category"> // no need for allowEmpty
-//             <SelectInput optionText="category_name" optionValue="_id" />
-//         </ReferenceInput>
-//     </Filter>
-// );
+const ProductFilter = props => (
+    <Filter {...props}>
+        <SearchInput source="q" alwaysOn />
+    </Filter>
+);
 
 const ProductList = (props) => (
-    <List {...props }>
+    <List {...props } exporter={false} filters={<ProductFilter />}>
         <Datagrid>
             <BooleanField source="published" />
+            <TextField source="sku" />
             <TextField source="title" />
             <TextField source="slug" />
+            <TextField source="price" />
             <ReferenceField label="Category" source="category" reference="category">
                 <ChipField source="category_name" />
             </ReferenceField>

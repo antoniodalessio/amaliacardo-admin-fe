@@ -5,6 +5,10 @@ import arrayMove from 'array-move';
 import dataProvider from '../../provider/dataProvider';
 
 //import * as s from './style.css'
+import {
+  Card
+} from '@material-ui/core' 
+
 
 interface Props {
   sortKey: string;
@@ -69,18 +73,24 @@ class SortableGridField extends React.Component<Props> {
 
       await dataProvider.update(this.props.parentResources, {id: categoryCopy._id, data: categoryCopy, previousData: null})
       
+      //reset oreder in other tab
+      const params = {
+        pagination: {page: 0, perPage: 0},
+        sort: {field: this.props.sortKey, order: 'ASC' },
+        filter: {}
+      }
+      await dataProvider.getList(this.props.parentResources, params)
     });
   };
 
   render() {
 
     return(
-      <SortableList 
+      <SortableList
         items={this.state.items}
         onSortEnd={this.onSortEnd}
         axis="xy"
-        helperClass="SortableHelper"
-        type={this.props.resources}
+       // helperClass='sortableHelper'
       />
     )
   }
@@ -88,7 +98,6 @@ class SortableGridField extends React.Component<Props> {
 
 
 export default SortableGridField
-
 
 
 const gridStyle = {
@@ -102,7 +111,9 @@ const elementStyle = {
   border: "1px solid #ccc",
   marginRight: "1%",
   marginBottom: "1%",
-  visibility: "visible"
+  visibility: "visible",
+  zIndex: 9999,
+  listStyleType: 'none'
 } as React.CSSProperties;
 
 const imgStyle = {
@@ -114,17 +125,17 @@ const SortableItem = SortableElement(({value}) => {
   
   let imageName = ""
   
-  if (value.hasOwnProperty('images')) {
-    imageName = `${value.images[0].uri}_thumb.jpg`
-  }else {
-    imageName = `${value.uri}_thumb.jpg`
+  if (value.hasOwnProperty('images') && value.images.length > 0) {
+    imageName = `${process.env.SITE_IMAGE_PATH}${value.images[0].uri}_thumb.jpg`
+  }else if (value.hasOwnProperty('uri')){
+    imageName = `${process.env.SITE_IMAGE_PATH}${value.uri}_thumb.jpg`
   }
-  const uri = `http://www.amaliacardo.it/images/work/${imageName}`
-  return(<li style={elementStyle}><img style={imgStyle} src={uri}></img></li>)
+  const uri = `${imageName}`
+  return(<li tabIndex={0} style={elementStyle}><Card><img style={imgStyle} src={uri}></img></Card></li>)
 });
 
 
-const SortableList = SortableContainer(({items, type}) => {
+const SortableList = SortableContainer(({items}) => {
   return (
     <ul style={gridStyle}>
       {items.map((value, index) => (

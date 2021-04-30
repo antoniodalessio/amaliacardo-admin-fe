@@ -1,7 +1,11 @@
 import * as React from 'react';
 import dataProvider from '../../provider/dataProvider';
-
+import { makeStyles } from '@material-ui/core/styles';
 import { Loading } from 'react-admin';
+import {
+  Button,
+  Paper
+} from '@material-ui/core' 
 
 
 interface State {
@@ -10,7 +14,7 @@ interface State {
 }
 
 class Show extends React.Component<{}, State> {
-    
+
   state = {
     loading: false,
     items: []
@@ -21,7 +25,7 @@ class Show extends React.Component<{}, State> {
     this.setState({
       loading: true
     })
-    const data = await dataProvider.publish()
+    const data = await dataProvider.publish({})
     this.setState({
       items: data.filesUploaded,
       loading: false
@@ -30,6 +34,14 @@ class Show extends React.Component<{}, State> {
 
   async publishModified(e) {
     e.preventDefault()
+    this.setState({
+      loading: true
+    })
+    const data = await dataProvider.publish({unpublished: true})
+    this.setState({
+      items: data.filesUploaded,
+      loading: false
+    })
   }
 
   clear() {
@@ -37,18 +49,19 @@ class Show extends React.Component<{}, State> {
       items: []
     })
   }
+
   
   render() {
 
-    const { items, loading  } = this.state
+    const { items, loading  } = this.state  
 
     return (
-      <div>
-        <h1>Pubblica</h1>
+      <Paper elevation={3} style={{padding: 10}}>
+        <h1 className="MuiTypography-h3">Pubblica</h1>
         {loading && <Loading loadingPrimary="Pubblicazione in corso" loadingSecondari=""/>}
-        <button onClick={this.clear.bind(this)}>Clear</button>
-        <button onClick={this.publishAll.bind(this)}>Pubblica tutto</button>
-        <button onClick={this.publishModified.bind(this)}>Pubblica modificati</button>
+        <Button variant="contained" color="secondary" onClick={this.clear.bind(this)}>Clear</Button>
+        <Button variant="contained" color="primary" onClick={this.publishAll.bind(this)}>Pubblica tutto</Button>
+        <Button variant="contained" color="primary" onClick={this.publishModified.bind(this)}>Pubblica modificati</Button>
         <ul>
         {
           items.map((item, index) => {
@@ -56,7 +69,7 @@ class Show extends React.Component<{}, State> {
           })
         }
         </ul>
-      </div>
+      </Paper>
     )
   }
 

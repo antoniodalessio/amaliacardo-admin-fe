@@ -17,20 +17,21 @@ const authProvider = {
                 localStorage.setItem('token', token);
             });
     },
-    checkAuth: params => {
+    checkAuth: async (params) => {
         const token = localStorage.getItem('token')
         const request = new Request(`${process.env.BASE_PATH}checkAuth`, {
             method: 'POST',
             body: JSON.stringify({ token }),
             headers: new Headers({ 'Content-Type': 'application/json' }),
         });
-        return fetch(request)
+        await fetch(request)
             .then(response => {
                 if (response.status < 200 || response.status >= 300) {
                     throw new Error(response.statusText);
                 }
                 return response.json();
             })
+        return Promise.resolve();
     },
     getPermissions: params => Promise.reject(),
     logout: async () => {

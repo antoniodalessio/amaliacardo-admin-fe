@@ -43,8 +43,50 @@ const convertFileToBase64 = file =>
         reader.readAsDataURL(file.rawFile);
     });
 
-const convertToBlob = async (uri) => {
-    return (await fetch(uri)).blob()
+
+const createFileFromUri = (record, key) => {
+    const imageName = (' ' + record[key]).slice(1);
+    record.file = {
+        rawFile: new File([], imageName),
+        uri: `${process.env.SITE_IMAGE_PATH}${imageName}_thumb.jpg`,
+        original: true
+    }
+}
+
+const handleInputData = (data) =>{
+
+    if (data.images && data.images.length > 0) {
+        data.images.map((image) => createFileFromUri(image, 'uri'))
+    }
+
+    if (data.thumb_preview) {
+        createFileFromUri(data, 'thumb_preview')
+    }
+
+    return data
+}
+
+function isEmpty(obj) {
+    for(const key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+const handleOutputData = async (data) => {
+    if (data.images && data.images.length > 0) {
+
+        for (const image of data.images) {
+            if (image.file && image.file.rawFile && !isEmpty(image.file.rawFile)) {
+                image.file.base64 = await convertFileToBase64(image.file)
+            }
+        }
+    }
+
+    if (data.file && data.file.rawFile && !isEmpty(data.file.rawFile)) {
+        data.file.base64 = await convertFileToBase64(data.file)
+    }
 }
 
 const simpleRestProvider =  (apiUrl, httpClient = fetchUtils.fetchJson): DataProvider => ({
@@ -65,7 +107,10 @@ const simpleRestProvider =  (apiUrl, httpClient = fetchUtils.fetchJson): DataPro
                 );
             }
             return {
-                data: json.map(resource => ({ ...resource, id: resource._id }) ),
+                data: json.map(resource => { 
+                    handleInputData(resource)
+                    return ({ ...resource, id: resource._id })
+                }),
                 total: parseInt(
                     headers
                         .get('content-range')
@@ -79,20 +124,7 @@ const simpleRestProvider =  (apiUrl, httpClient = fetchUtils.fetchJson): DataPro
 
     getOne: async (resource, params) => {
         return httpClient(`${apiUrl}/${resource}/${params.id}`).then( async ({ json }) => { 
-            
-            if (json.hasOwnProperty('images')) {
-                for(const image of json.images) {
-                    image.imagedata = {
-                        uri: `http://www.amaliacardo.it/images/work/${image.uri}_thumb.jpg`
-                    }
-                    image.imagedata.rawFile = {
-                        //path: await convertToBlob(`https://www.amaliacardo.it/images/work/${image.uri}_thumb.jpg`)
-                    }
-                }
-            }
-
-            //console.log(json)
-
+            handleInputData(json)
             return ({
                 data: { ...json, id: json._id },
         })})
@@ -104,7 +136,10 @@ const simpleRestProvider =  (apiUrl, httpClient = fetchUtils.fetchJson): DataPro
         };
         const url = `${apiUrl}/${resource}?${stringify(query)}`;
         return httpClient(url).then(({ json }) => ({ 
-            data: json.map(resource => ({ ...resource, id: resource._id }) ),
+            data: json.map(resource => {
+                handleInputData(resource)
+                return ({ ...resource, id: resource._id }) 
+            }),
         }));
     },
 
@@ -128,7 +163,10 @@ const simpleRestProvider =  (apiUrl, httpClient = fetchUtils.fetchJson): DataPro
                 );
             }
             return {
-                data: json.map(resource => ({ ...resource, id: resource._id }) ),
+                data: json.map(resource => {
+                    handleInputData(resource)
+                    return ({ ...resource, id: resource._id }) 
+                }),
                 total: parseInt(
                     headers
                         .get('content-range')
@@ -142,13 +180,7 @@ const simpleRestProvider =  (apiUrl, httpClient = fetchUtils.fetchJson): DataPro
 
     update: async (resource, params) => {
 
-        if (params.data.hasOwnProperty('images')) {
-            for (const image of params.data.images) {
-                if (image.hasOwnProperty('imagedata')) {
-                    image.imagedata.base64 = await convertFileToBase64(image.imagedata)
-                }
-            }
-        }
+        await handleOutputData(params.data)
 
         return httpClient(`${apiUrl}/${resource}/${params.id}`, {
             method: 'PUT',
@@ -172,13 +204,7 @@ const simpleRestProvider =  (apiUrl, httpClient = fetchUtils.fetchJson): DataPro
 
     create: async (resource, params) => {
 
-        if (params.data.hasOwnProperty('images')) {
-            for (const image of params.data.images) {
-                if (image.hasOwnProperty('imagedata')) {
-                    image.imagedata.base64 = await convertFileToBase64(image.imagedata)
-                }
-            }
-        }
+        await handleOutputData(params.data)
 
         return httpClient(`${apiUrl}/${resource}`, {
             method: 'POST',
@@ -206,7 +232,12 @@ const simpleRestProvider =  (apiUrl, httpClient = fetchUtils.fetchJson): DataPro
             )
         ).then(responses => ({ data: responses.map(({ json }) => json.id) })),
     publish: (params) => {
-        return httpClient(`${apiUrl}/publish`, {
+        let queryString = '?'
+        if (params && params.unpublished) {
+            queryString += 'unpublished=true'
+        }
+        
+        return httpClient(`${apiUrl}/publish${queryString}`, {
             method: 'GET',
         }).then((response) => {
             return response.json
