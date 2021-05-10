@@ -12,6 +12,7 @@ import {
     TabbedForm,
     FormTab,
     BooleanField,
+    BooleanInput,
     FormDataConsumer,
     DateInput
 } from 'react-admin';
@@ -48,6 +49,7 @@ const ProductEdit = (props) => {
         <TabbedForm>
           <FormTab label="Generali">
               <BooleanField source="published" />
+              <BooleanInput source="enabled" />
               <TextInput source="sku" />
               <TextInput source="title" />
               <TextInput source="description" fullWidth={true} multiline={true}/>

@@ -9,7 +9,8 @@ import {
     ReferenceInput,
     SelectInput,
     ImageInput,
-    ImageField
+    ImageField,
+    BooleanInput
 } from 'react-admin';
 
 import RichTextInput from 'ra-input-rich-text';
@@ -32,6 +33,7 @@ class CategoryEdit extends React.Component {
           <TabbedForm>
               <FormTab label="generali">
                 <BooleanField source="published" />
+                <BooleanInput source="enabled" />
                 <ReferenceInput className="parentCategory" label="Categoria Padre" source="parent" reference="category">
                   <SelectInput optionText="category_name" optionValue="_id" />
                 </ReferenceInput>

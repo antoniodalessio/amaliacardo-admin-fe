@@ -72,6 +72,7 @@ const CategoryList = (props) => {
         <List {...props} exporter={false} filters={<CategoryFilter />}>
             <Datagrid>
                 <BooleanField source="published" />
+                <BooleanField source="enabled" />
                 <TextField source="title" />
                 <TextField source="slug" />
                 <TextField source="ord" />

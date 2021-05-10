@@ -9,7 +9,8 @@ import {
     ReferenceInput,
     SelectInput,
     ImageInput,
-    ImageField
+    ImageField,
+    BooleanInput
 } from 'react-admin';
 import RichTextInput from 'ra-input-rich-text';
 
@@ -19,6 +20,7 @@ const CategoryCreate = (props) => (
         <TabbedForm>
             <FormTab label="generali">
                 <BooleanField source="published" />
+                <BooleanInput source="enabled" />
                 <ReferenceInput label="Categoria Padre" source="parent" reference="category">
                     <SelectInput optionText="category_name" optionValue="_id" />
                 </ReferenceInput>

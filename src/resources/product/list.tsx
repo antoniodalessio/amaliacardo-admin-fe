@@ -22,6 +22,7 @@ const ProductList = (props) => (
     <List {...props } exporter={false} filters={<ProductFilter />}>
         <Datagrid>
             <BooleanField source="published" />
+            <BooleanField source="enabled" />
             <TextField source="sku" />
             <TextField source="title" />
             <TextField source="slug" />
