@@ -9,14 +9,8 @@ import {
     ChipField,
     Filter,
     SearchInput,
+    Pagination
 } from 'react-admin';
-
-import {
-    Card,
-    CardContent,
-    CardActions,
-    CardHeader
-  } from '@material-ui/core' 
   
 
 import CategoryIcon from '@material-ui/icons/Category';
@@ -37,39 +31,12 @@ const cardStyle = {
     verticalAlign: 'top'
 };
 
-/*const CategoryGrid = ({ ids, data, basePath }) => (
-    <div style={{ margin: '1em' }}> 
-        {ids.map(id =>
-        <Card key={id} style={cardStyle}>
-            <CardHeader
-                title={<TextField record={data[id]} source="title" />}
-            />
-            <CardContent>
-                <img style={{width: '100%'} }src={`${process.env.SITE_IMAGE_PATH}${data[id].thumb_preview}_thumb.jpg`} /> 
-            </CardContent>
-            <CardActions style={{ textAlign: 'right' }}>
-                <EditButton resource="posts" basePath={basePath} record={data[id]} />
-            </CardActions>
-        </Card>
-        )}
-    </div>
-)*/
+const CategoryPagination = props => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} {...props} />;
 
-/*
-<CategoryGrid ids={props.ids} data={props.data} basePath={props.basePath}/>
-<Datagrid>
-                <BooleanField source="published" />
-                <TextField source="title" />
-                <TextField source="slug" />
-                <ReferenceField label="Categoria padre" source="parent" reference="category">
-                    <ChipField source="category_name" />
-                </ReferenceField>
-                <EditButton basePath="/category" />
-            </Datagrid>*/
 
 const CategoryList = (props) => {
     return (
-        <List {...props} exporter={false} filters={<CategoryFilter />}>
+        <List {...props} exporter={false} filters={<CategoryFilter />} pagination={<CategoryPagination />} perPage={100}>
             <Datagrid>
                 <BooleanField source="published" />
                 <BooleanField source="enabled" />

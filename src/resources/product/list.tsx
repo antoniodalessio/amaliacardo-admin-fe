@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { 
-    SelectInput,
+import {
     Filter,
     List,
     Datagrid, 
@@ -9,7 +8,8 @@ import {
     ReferenceField,
     BooleanField,
     ChipField,
-    SearchInput
+    SearchInput,
+    Pagination
 } from 'react-admin';
 
 const ProductFilter = props => (
@@ -18,8 +18,10 @@ const ProductFilter = props => (
     </Filter>
 );
 
+const ProductPagination = props => <Pagination rowsPerPageOptions={[10, 25, 50, 100]} {...props} />;
+
 const ProductList = (props) => (
-    <List {...props } exporter={false} filters={<ProductFilter />}>
+    <List {...props } exporter={false} filters={<ProductFilter />} pagination={<ProductPagination />} perPage={100}>
         <Datagrid>
             <BooleanField source="published" />
             <BooleanField source="enabled" />
